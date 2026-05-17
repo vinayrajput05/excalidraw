@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { Popover } from "radix-ui";
 
 import {
@@ -207,39 +207,39 @@ export const SelectedShapeActions = ({
 
       {(hasStrokeStyle(appState.activeTool.type) ||
         targetElements.some((element) => hasStrokeStyle(element.type))) && (
-        <>
-          {renderAction("changeStrokeStyle")}
-          {renderAction("changeSloppiness")}
-        </>
-      )}
+          <>
+            {renderAction("changeStrokeStyle")}
+            {renderAction("changeSloppiness")}
+          </>
+        )}
 
       {(canChangeRoundness(appState.activeTool.type) ||
         targetElements.some((element) => canChangeRoundness(element.type))) && (
-        <>{renderAction("changeRoundness")}</>
-      )}
+          <>{renderAction("changeRoundness")}</>
+        )}
 
       {(toolIsArrow(appState.activeTool.type) ||
         targetElements.some((element) => toolIsArrow(element.type))) && (
-        <>{renderAction("changeArrowType")}</>
-      )}
+          <>{renderAction("changeArrowType")}</>
+        )}
 
       {(appState.activeTool.type === "text" ||
         targetElements.some(isTextElement)) && (
-        <>
-          <fieldset>{renderAction("changeFontFamily")}</fieldset>
-          {renderAction("changeFontSize")}
-          {(appState.activeTool.type === "text" ||
-            suppportsHorizontalAlign(targetElements, elementsMap)) &&
-            renderAction("changeTextAlign")}
-        </>
-      )}
+          <>
+            <fieldset>{renderAction("changeFontFamily")}</fieldset>
+            {renderAction("changeFontSize")}
+            {(appState.activeTool.type === "text" ||
+              suppportsHorizontalAlign(targetElements, elementsMap)) &&
+              renderAction("changeTextAlign")}
+          </>
+        )}
 
       {shouldAllowVerticalAlign(targetElements, elementsMap) &&
         renderAction("changeVerticalAlign")}
       {(canHaveArrowheads(appState.activeTool.type) ||
         targetElements.some((element) => canHaveArrowheads(element.type))) && (
-        <>{renderAction("changeArrowhead")}</>
-      )}
+          <>{renderAction("changeArrowhead")}</>
+        )}
 
       {renderAction("changeOpacity")}
 
@@ -385,7 +385,7 @@ const CombinedShapeProperties = ({
             className={PROPERTIES_CLASSES}
             container={container}
             style={{ maxWidth: "13rem" }}
-            onClose={() => {}}
+            onClose={() => { }}
           >
             <div className="selected-shape-actions">
               {showFillIcons && renderAction("changeFillStyle")}
@@ -398,11 +398,11 @@ const CombinedShapeProperties = ({
                 targetElements.some((element) =>
                   hasStrokeStyle(element.type),
                 )) && (
-                <>
-                  {renderAction("changeStrokeStyle")}
-                  {renderAction("changeSloppiness")}
-                </>
-              )}
+                  <>
+                    {renderAction("changeStrokeStyle")}
+                    {renderAction("changeSloppiness")}
+                  </>
+                )}
               {(canChangeRoundness(appState.activeTool.type) ||
                 targetElements.some((element) =>
                   canChangeRoundness(element.type),
@@ -479,8 +479,8 @@ const CombinedArrowProperties = ({
                     return element.elbowed
                       ? "elbow"
                       : element.roundness
-                      ? "round"
-                      : "sharp";
+                        ? "round"
+                        : "sharp";
                   }
                   return null;
                 },
@@ -504,7 +504,7 @@ const CombinedArrowProperties = ({
             container={container}
             className="properties-content"
             style={{ maxWidth: "13rem" }}
-            onClose={() => {}}
+            onClose={() => { }}
           >
             {renderAction("changeArrowProperties")}
           </PropertiesPopover>
@@ -688,7 +688,7 @@ const CombinedExtraActions = ({
               justifyContent: "center",
               alignItems: "center",
             }}
-            onClose={() => {}}
+            onClose={() => { }}
           >
             <div className="selected-shape-actions">
               <fieldset>
@@ -852,20 +852,20 @@ export const CompactShapeActions = ({
       {/* Text Properties */}
       {(appState.activeTool.type === "text" ||
         targetElements.some(isTextElement)) && (
-        <>
-          <div className="compact-action-item">
-            {renderAction("changeFontFamily")}
-          </div>
-          <CombinedTextProperties
-            appState={appState}
-            renderAction={renderAction}
-            setAppState={setAppState}
-            targetElements={targetElements}
-            container={container}
-            elementsMap={elementsMap}
-          />
-        </>
-      )}
+          <>
+            <div className="compact-action-item">
+              {renderAction("changeFontFamily")}
+            </div>
+            <CombinedTextProperties
+              appState={appState}
+              renderAction={renderAction}
+              setAppState={setAppState}
+              targetElements={targetElements}
+              container={container}
+              elementsMap={elementsMap}
+            />
+          </>
+        )}
 
       {/* Dedicated Copy Button */}
       {!isEditingTextOrNewElement && targetElements.length > 0 && (
@@ -987,20 +987,20 @@ export const MobileShapeActions = ({
         {/* Text Properties */}
         {(appState.activeTool.type === "text" ||
           targetElements.some(isTextElement)) && (
-          <>
-            <div className="compact-action-item">
-              {renderAction("changeFontFamily")}
-            </div>
-            <CombinedTextProperties
-              appState={appState}
-              renderAction={renderAction}
-              setAppState={setAppState}
-              targetElements={targetElements}
-              container={container}
-              elementsMap={elementsMap}
-            />
-          </>
-        )}
+            <>
+              <div className="compact-action-item">
+                {renderAction("changeFontFamily")}
+              </div>
+              <CombinedTextProperties
+                appState={appState}
+                renderAction={renderAction}
+                setAppState={setAppState}
+                targetElements={targetElements}
+                container={container}
+                elementsMap={elementsMap}
+              />
+            </>
+          )}
 
         {/* Combined Other Actions */}
         <CombinedExtraActions
@@ -1038,6 +1038,141 @@ export const MobileShapeActions = ({
   );
 };
 
+export const LaserPopover = ({
+  app,
+  activeTool,
+  setAppState,
+}: {
+  app: AppClassProperties;
+  activeTool: UIAppState["activeTool"];
+  setAppState: React.Component<any, AppState>["setState"];
+}) => {
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const isActive = activeTool.type === "laser";
+  const { container } = useExcalidrawContainer();
+  const SIDE_OFFSET = 32 / 2 + 10;
+
+  useEffect(() => {
+    const unsubscribe = app.onPointerDownEmitter.on(() => {
+      setIsPopupOpen(false);
+    });
+    return () => unsubscribe?.();
+  }, [app]);
+
+  const setLaserMode = (mode: AppState["laserMode"]) => {
+    app.setActiveTool({ type: "laser" });
+    if (app.state.laserMode === mode) {
+      return;
+    }
+    setAppState({ laserMode: mode });
+  };
+
+  const setLaserThickness = (value: number) => {
+    setAppState({ laserThickness: Math.max(1, Math.min(10, value)) });
+  };
+
+  return (
+    <Popover.Root open={isPopupOpen}>
+      <Popover.Trigger asChild>
+        <ToolButton
+          className={clsx("Shape", {
+            active: isActive,
+          })}
+          type="radio"
+          icon={laserPointerToolIcon}
+          checked={isActive}
+          name="editor-current-shape"
+          title={`${capitalizeString(t("toolBar.laser"))} — K`}
+          aria-label={capitalizeString(t("toolBar.laser"))}
+          data-testid="toolbar-laser"
+          onPointerDown={() => {
+            setIsPopupOpen((v) => !v);
+            app.setActiveTool({ type: "laser" });
+          }}
+        />
+      </Popover.Trigger>
+
+      <Popover.Content
+        className="tool-popover-content laser-popover-content"
+        sideOffset={SIDE_OFFSET}
+        collisionBoundary={container ?? undefined}
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 12,
+          padding: 12,
+          minWidth: 160,
+          backgroundColor: "var(--island-bg-color)",
+          border: "1px solid var(--color-gray-20)",
+          borderRadius: 8,
+          boxShadow: "var(--box-shadow-large)",
+          zIndex: 100,
+        }}
+      >
+        <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+          <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, cursor: "pointer", color: "var(--color-on-surface)" }}>
+            <input
+              type="radio"
+              name="laser-mode"
+              checked={app.state.laserMode === "hold"}
+              onChange={() => setLaserMode("hold")}
+            />
+            Draw
+          </label>
+          <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, cursor: "pointer", color: "var(--color-on-surface)" }}>
+            <input
+              type="radio"
+              name="laser-mode"
+              checked={app.state.laserMode === "annotation"}
+              onChange={() => setLaserMode("annotation")}
+            />
+            Active
+          </label>
+          <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, cursor: "pointer", color: "var(--color-on-surface)" }}>
+            <input
+              type="radio"
+              name="laser-mode"
+              checked={app.state.laserMode === "pointer"}
+              onChange={() => setLaserMode("pointer")}
+            />
+            Pointer
+          </label>
+        </div>
+
+        <div style={{ borderTop: "1px solid var(--color-gray-20)", paddingTop: 8 }}>
+          <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, cursor: "pointer", color: "var(--color-on-surface)" }}>
+            <input
+              type="checkbox"
+              checked={app.state.laserNeon}
+              onChange={() => setAppState({ laserNeon: !app.state.laserNeon })}
+            />
+            Neon glow
+          </label>
+        </div>
+
+        <div style={{ borderTop: "1px solid var(--color-gray-20)", paddingTop: 8, display: "flex", flexDirection: "column", gap: 4 }}>
+          <label
+            htmlFor="laser-thickness-range-popover"
+            style={{ fontSize: 12, color: "var(--color-on-surface)" }}
+          >
+            Thickness: {app.state.laserThickness}px
+          </label>
+          <input
+            id="laser-thickness-range-popover"
+            type="range"
+            min={1}
+            max={10}
+            step={1}
+            value={app.state.laserThickness}
+            onChange={(event) => setLaserThickness(Number(event.target.value))}
+            style={{ cursor: "pointer", width: "100%" }}
+          />
+        </div>
+      </Popover.Content>
+    </Popover.Root>
+  );
+};
+
 export const ShapesSwitcher = ({
   activeTool,
   setAppState,
@@ -1051,7 +1186,6 @@ export const ShapesSwitcher = ({
 }) => {
   const [isExtraToolsMenuOpen, setIsExtraToolsMenuOpen] = useState(false);
   const stylesPanelMode = useStylesPanelMode();
-  const isFullStylesPanel = stylesPanelMode === "full";
   const isCompactStylesPanel = stylesPanelMode === "compact";
 
   const SELECTION_TOOLS = [
@@ -1068,41 +1202,20 @@ export const ShapesSwitcher = ({
   ] as const;
 
   const frameToolSelected = activeTool.type === "frame";
-  const laserToolSelected = activeTool.type === "laser";
-  const lassoToolSelected =
-    isFullStylesPanel &&
-    activeTool.type === "lasso" &&
-    app.state.preferredSelectionTool.type !== "lasso";
-
   const embeddableToolSelected = activeTool.type === "embeddable";
 
   const { TTDDialogTriggerTunnel } = useTunnels();
-
-  const setLaserMode = (mode: AppState["laserMode"]) => {
-    app.setActiveTool({ type: "laser" });
-
-    if (app.state.laserMode === mode) {
-      return;
-    }
-
-    setAppState({ laserMode: mode });
-  };
-
-  const setLaserThickness = (value: number) => {
-    setAppState({ laserThickness: Math.max(1, Math.min(10, value)) });
-  };
 
   return (
     <>
       {getToolbarTools(app).map(
         ({ value, icon, key, numericKey, fillable, toolbar }) => {
           if (
-            toolbar === false ||
             UIOptions.tools?.[
-              value as Extract<
-                typeof value,
-                keyof AppProps["UIOptions"]["tools"]
-              >
+            value as Extract<
+              typeof value,
+              keyof AppProps["UIOptions"]["tools"]
+            >
             ] === false
           ) {
             return null;
@@ -1111,9 +1224,12 @@ export const ShapesSwitcher = ({
           const label = t(`toolBar.${value}`);
           const letter =
             key && capitalizeString(typeof key === "string" ? key : key[0]);
-          const shortcut = letter
-            ? `${letter} ${t("helpDialog.or")} ${numericKey}`
-            : `${numericKey}`;
+          const shortcut =
+            letter && numericKey
+              ? `${letter} ${t("helpDialog.or")} ${numericKey}`
+              : letter
+                ? `${letter}`
+                : `${numericKey}`;
           const keybindingLabel =
             value === "hand" ? undefined : numericKey || letter;
 
@@ -1123,6 +1239,9 @@ export const ShapesSwitcher = ({
             (value === "selection" || value === "lasso") &&
             isCompactStylesPanel
           ) {
+            if (value === "lasso") {
+              return null;
+            }
             return (
               <ToolPopover
                 key={"selection-popover"}
@@ -1148,6 +1267,17 @@ export const ShapesSwitcher = ({
                   ) || SELECTION_TOOLS[0]
                 }
                 fillable={activeTool.type === "selection"}
+              />
+            );
+          }
+
+          if (value === "laser") {
+            return (
+              <LaserPopover
+                key="laser-popover"
+                app={app}
+                activeTool={activeTool}
+                setAppState={setAppState}
               />
             );
           }
@@ -1200,13 +1330,7 @@ export const ShapesSwitcher = ({
         <DropdownMenu.Trigger
           className={clsx("App-toolbar__extra-tools-trigger", {
             "App-toolbar__extra-tools-trigger--selected":
-              frameToolSelected ||
-              embeddableToolSelected ||
-              lassoToolSelected ||
-              // in collab we're already highlighting the laser button
-              // outside toolbar, so let's not highlight extra-tools button
-              // on top of it
-              (laserToolSelected && !app.props.isCollaborating),
+              frameToolSelected || embeddableToolSelected,
           })}
           onToggle={() => {
             setIsExtraToolsMenuOpen(!isExtraToolsMenuOpen);
@@ -1217,12 +1341,8 @@ export const ShapesSwitcher = ({
           {frameToolSelected
             ? frameToolIcon
             : embeddableToolSelected
-            ? EmbedIcon
-            : laserToolSelected && !app.props.isCollaborating
-            ? laserPointerToolIcon
-            : lassoToolSelected
-            ? LassoIcon
-            : extraToolsIcon}
+              ? EmbedIcon
+              : extraToolsIcon}
         </DropdownMenu.Trigger>
         <DropdownMenu.Content
           onClickOutside={() => setIsExtraToolsMenuOpen(false)}
@@ -1246,78 +1366,6 @@ export const ShapesSwitcher = ({
           >
             {t("toolBar.embeddable")}
           </DropdownMenu.Item>
-          <DropdownMenu.Sub>
-            <DropdownMenu.Sub.Trigger icon={laserPointerToolIcon}>
-              {t("toolBar.laser")}
-            </DropdownMenu.Sub.Trigger>
-            <DropdownMenu.Sub.Content>
-              <DropdownMenu.ItemCheckbox
-                checked={laserToolSelected && app.state.laserMode === "hold"}
-                onSelect={() => setLaserMode("hold")}
-                shortcut={KEYS.K.toLocaleUpperCase()}
-                data-testid="toolbar-laser"
-              >
-                Draw
-              </DropdownMenu.ItemCheckbox>
-              <DropdownMenu.ItemCheckbox
-                checked={
-                  laserToolSelected && app.state.laserMode === "annotation"
-                }
-                onSelect={() => setLaserMode("annotation")}
-              >
-                Active
-              </DropdownMenu.ItemCheckbox>
-              <DropdownMenu.ItemCheckbox
-                checked={laserToolSelected && app.state.laserMode === "pointer"}
-                onSelect={() => setLaserMode("pointer")}
-              >
-                Pointer
-              </DropdownMenu.ItemCheckbox>
-              <DropdownMenu.ItemCheckbox
-                checked={app.state.laserNeon}
-                onSelect={() => setAppState({ laserNeon: !app.state.laserNeon })}
-              >
-                Neon glow
-              </DropdownMenu.ItemCheckbox>
-              <DropdownMenu.ItemCustom
-                onPointerDown={(event) => event.stopPropagation()}
-                onClick={(event) => event.stopPropagation()}
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 8,
-                  paddingTop: 8,
-                  paddingBottom: 8,
-                }}
-              >
-                <label
-                  htmlFor="laser-thickness-range"
-                  style={{ fontSize: 12, color: "var(--color-on-surface)" }}
-                >
-                  Thickness: {app.state.laserThickness}px
-                </label>
-                <input
-                  id="laser-thickness-range"
-                  type="range"
-                  min={1}
-                  max={10}
-                  step={1}
-                  value={app.state.laserThickness}
-                  onChange={(event) => setLaserThickness(Number(event.target.value))}
-                />
-              </DropdownMenu.ItemCustom>
-            </DropdownMenu.Sub.Content>
-          </DropdownMenu.Sub>
-          {isFullStylesPanel && (
-            <DropdownMenu.Item
-              onSelect={() => app.setActiveTool({ type: "lasso" })}
-              icon={LassoIcon}
-              data-testid="toolbar-lasso"
-              selected={lassoToolSelected}
-            >
-              {t("toolBar.lasso")}
-            </DropdownMenu.Item>
-          )}
           <div style={{ margin: "6px 0", fontSize: 14, fontWeight: 600 }}>
             Generate
           </div>

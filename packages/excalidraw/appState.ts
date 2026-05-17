@@ -60,7 +60,7 @@ export const getDefaultAppState = (): Omit<
     },
     penMode: false,
     penDetected: false,
-    laserMode: "hold",
+    laserMode: "annotation",
     laserThickness: 2,
     laserNeon: true,
     errorMessage: null,

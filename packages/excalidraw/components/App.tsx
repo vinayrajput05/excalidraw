@@ -5590,6 +5590,7 @@ class App extends React.Component<AppProps, AppState> {
           ...prevState,
           ...commonResets,
           activeTool: nextActiveTool,
+          preferredSelectionTool: { type: "lasso", initialized: true },
           ...(keepSelection
             ? {}
             : {
@@ -5614,6 +5615,7 @@ class App extends React.Component<AppProps, AppState> {
         ...prevState,
         ...commonResets,
         activeTool: nextActiveTool,
+        preferredSelectionTool: { type: "selection", initialized: true },
       };
     });
   };

@@ -107,7 +107,7 @@ export class LaserTrails implements Trail {
   private getLocalLaserSettings(): LaserSettings {
     const state = this.app.state;
     return {
-      mode: state?.laserMode ?? "hold",
+      mode: state?.laserMode ?? "annotation",
       thickness: this.clampThickness(state?.laserThickness),
       neon: state?.laserNeon ?? true,
       color: DEFAULT_LASER_COLOR,
@@ -119,7 +119,7 @@ export class LaserTrails implements Trail {
     collaborator: Collaborator,
   ): LaserSettings {
     return {
-      mode: collaborator.pointer?.laserMode || "hold",
+      mode: collaborator.pointer?.laserMode || "annotation",
       thickness: this.clampThickness(collaborator.pointer?.laserThickness),
       neon: collaborator.pointer?.laserNeon ?? true,
       color:
