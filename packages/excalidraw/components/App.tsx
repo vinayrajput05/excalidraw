@@ -5573,7 +5573,10 @@ class App extends React.Component<AppProps, AppState> {
           ? prevState.selectedLinearElement
           : null,
         frameToHighlight: null,
-      } as const;
+        currentItemStrokeWidth: nextActiveTool.type === "freedraw" && prevState.activeTool.type !== "freedraw"
+          ? 2
+          : prevState.currentItemStrokeWidth,
+      };
 
       if (nextActiveTool.type === "freedraw") {
         this.store.scheduleCapture();

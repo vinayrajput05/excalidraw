@@ -240,8 +240,8 @@ const offsetElementAfterFontResize = (
       prevElement.textAlign === "left"
         ? prevElement.x
         : prevElement.x +
-          (prevElement.width - nextElement.width) /
-            (prevElement.textAlign === "center" ? 2 : 1),
+        (prevElement.width - nextElement.width) /
+        (prevElement.textAlign === "center" ? 2 : 1),
     // centering vertically is non-standard, but for Excalidraw I think
     // it makes sense
     y: prevElement.y + (prevElement.height - nextElement.height) / 2,
@@ -328,8 +328,8 @@ export const actionChangeStrokeColor = register<
           (el) => {
             return hasStrokeColor(el.type)
               ? newElementWith(el, {
-                  strokeColor: value.currentItemStrokeColor,
-                })
+                strokeColor: value.currentItemStrokeColor,
+              })
               : el;
           },
           true,
@@ -470,8 +470,7 @@ export const actionChangeFillStyle = register<ExcalidrawElement["fillStyle"]>({
     trackEvent(
       "element",
       "changeFillStyle",
-      `${value} (${
-        app.editorInterface.formFactor === "phone" ? "mobile" : "desktop"
+      `${value} (${app.editorInterface.formFactor === "phone" ? "mobile" : "desktop"
       })`,
     );
     return {
@@ -499,9 +498,8 @@ export const actionChangeFillStyle = register<ExcalidrawElement["fillStyle"]>({
             options={[
               {
                 value: "hachure",
-                text: `${
-                  allElementsZigZag ? t("labels.zigzag") : t("labels.hachure")
-                } (${getShortcutKey("Alt-Click")})`,
+                text: `${allElementsZigZag ? t("labels.zigzag") : t("labels.hachure")
+                  } (${getShortcutKey("Alt-Click")})`,
                 icon: allElementsZigZag ? FillZigZagIcon : FillHachureIcon,
                 active: allElementsZigZag ? true : undefined,
                 testId: `fill-hachure`,
@@ -530,8 +528,8 @@ export const actionChangeFillStyle = register<ExcalidrawElement["fillStyle"]>({
             onClick={(value, event) => {
               const nextValue =
                 event.altKey &&
-                value === "hachure" &&
-                selectedElements.every((el) => el.fillStyle === "hachure")
+                  value === "hachure" &&
+                  selectedElements.every((el) => el.fillStyle === "hachure")
                   ? "zigzag"
                   : value;
 
@@ -561,45 +559,69 @@ export const actionChangeStrokeWidth = register<
       captureUpdate: CaptureUpdateAction.IMMEDIATELY,
     };
   },
-  PanelComponent: ({ elements, appState, updateData, app, data }) => (
-    <fieldset>
-      <legend>{t("labels.strokeWidth")}</legend>
-      <div className="buttonList">
-        <RadioSelection
-          group="stroke-width"
-          options={[
-            {
-              value: STROKE_WIDTH.thin,
-              text: t("labels.thin"),
-              icon: StrokeWidthBaseIcon,
-              testId: "strokeWidth-thin",
-            },
-            {
-              value: STROKE_WIDTH.bold,
-              text: t("labels.bold"),
-              icon: StrokeWidthBoldIcon,
-              testId: "strokeWidth-bold",
-            },
-            {
-              value: STROKE_WIDTH.extraBold,
-              text: t("labels.extraBold"),
-              icon: StrokeWidthExtraBoldIcon,
-              testId: "strokeWidth-extraBold",
-            },
-          ]}
-          value={getFormValue(
-            elements,
-            app,
-            (element) => element.strokeWidth,
-            (element) => element.hasOwnProperty("strokeWidth"),
-            (hasSelection) =>
-              hasSelection ? null : appState.currentItemStrokeWidth,
-          )}
-          onChange={(value) => updateData(value)}
+  PanelComponent: ({ elements, appState, updateData, app, data }) => {
+    const isFreeDraw =
+      appState.activeTool.type === "freedraw" ||
+      (elements.length > 0 &&
+        elements.every((el) => el.type === "freedraw"));
+
+    const value = getFormValue(
+      elements,
+      app,
+      (element) => element.strokeWidth,
+      (element) => element.hasOwnProperty("strokeWidth"),
+      (hasSelection) =>
+        hasSelection ? null : appState.currentItemStrokeWidth,
+    );
+
+    if (isFreeDraw) {
+      return (
+        <Range
+          label={t("labels.strokeWidth")}
+          value={value ?? appState.currentItemStrokeWidth}
+          hasCommonValue={value !== null}
+          onChange={updateData}
+          min={0.4}
+          max={5}
+          step={0.2}
+          testId="strokeWidth"
         />
-      </div>
-    </fieldset>
-  ),
+      );
+    }
+
+    return (
+      <fieldset>
+        <legend>{t("labels.strokeWidth")}</legend>
+        <div className="buttonList">
+          <RadioSelection
+            group="stroke-width"
+            options={[
+              {
+                value: STROKE_WIDTH.thin,
+                text: t("labels.thin"),
+                icon: StrokeWidthBaseIcon,
+                testId: "strokeWidth-thin",
+              },
+              {
+                value: STROKE_WIDTH.bold,
+                text: t("labels.bold"),
+                icon: StrokeWidthBoldIcon,
+                testId: "strokeWidth-bold",
+              },
+              {
+                value: STROKE_WIDTH.extraBold,
+                text: t("labels.extraBold"),
+                icon: StrokeWidthExtraBoldIcon,
+                testId: "strokeWidth-extraBold",
+              },
+            ]}
+            value={value}
+            onChange={(value) => updateData(value)}
+          />
+        </div>
+      </fieldset>
+    );
+  },
 });
 
 export const actionChangeSloppiness = register<ExcalidrawElement["roughness"]>({
@@ -1507,10 +1529,10 @@ export const actionChangeRoundness = register<"sharp" | "round">({
           roundness:
             value === "round"
               ? {
-                  type: isUsingAdaptiveRadius(el.type)
-                    ? ROUNDNESS.ADAPTIVE_RADIUS
-                    : ROUNDNESS.PROPORTIONAL_RADIUS,
-                }
+                type: isUsingAdaptiveRadius(el.type)
+                  ? ROUNDNESS.ADAPTIVE_RADIUS
+                  : ROUNDNESS.PROPORTIONAL_RADIUS,
+              }
               : null,
         });
       }),
@@ -1556,8 +1578,8 @@ export const actionChangeRoundness = register<"sharp" | "round">({
                 hasLegacyRoundness
                   ? null
                   : element.roundness
-                  ? "round"
-                  : "sharp",
+                    ? "round"
+                    : "sharp",
               (element) =>
                 !isArrowElement(element) && element.hasOwnProperty("roundness"),
               (hasSelection) =>
@@ -1825,35 +1847,35 @@ export const actionChangeArrowType = register<keyof typeof ARROW_TYPE>({
         roundness:
           value === ARROW_TYPE.round
             ? {
-                type: ROUNDNESS.PROPORTIONAL_RADIUS,
-              }
+              type: ROUNDNESS.PROPORTIONAL_RADIUS,
+            }
             : null,
         elbowed: value === ARROW_TYPE.elbow,
         angle: value === ARROW_TYPE.elbow ? (0 as Radians) : el.angle,
         points:
           value === ARROW_TYPE.elbow || el.elbowed
             ? [
-                LinearElementEditor.pointFromAbsoluteCoords(
-                  {
-                    ...el,
-                    x: startPoint[0],
-                    y: startPoint[1],
-                    angle: 0 as Radians,
-                  },
-                  startPoint,
-                  elementsMap,
-                ),
-                LinearElementEditor.pointFromAbsoluteCoords(
-                  {
-                    ...el,
-                    x: startPoint[0],
-                    y: startPoint[1],
-                    angle: 0 as Radians,
-                  },
-                  endPoint,
-                  elementsMap,
-                ),
-              ]
+              LinearElementEditor.pointFromAbsoluteCoords(
+                {
+                  ...el,
+                  x: startPoint[0],
+                  y: startPoint[1],
+                  angle: 0 as Radians,
+                },
+                startPoint,
+                elementsMap,
+              ),
+              LinearElementEditor.pointFromAbsoluteCoords(
+                {
+                  ...el,
+                  x: startPoint[0],
+                  y: startPoint[1],
+                  angle: 0 as Radians,
+                },
+                endPoint,
+                elementsMap,
+              ),
+            ]
             : el.points,
       });
 
@@ -1890,30 +1912,30 @@ export const actionChangeArrowType = register<keyof typeof ARROW_TYPE>({
         const startBinding =
           startElement && newElement.startBinding
             ? {
-                // @ts-ignore TS cannot discern check above
-                ...newElement.startBinding!,
-                ...calculateFixedPointForElbowArrowBinding(
-                  newElement,
-                  startElement,
-                  "start",
-                  elementsMap,
-                  appState.isBindingEnabled,
-                ),
-              }
+              // @ts-ignore TS cannot discern check above
+              ...newElement.startBinding!,
+              ...calculateFixedPointForElbowArrowBinding(
+                newElement,
+                startElement,
+                "start",
+                elementsMap,
+                appState.isBindingEnabled,
+              ),
+            }
             : null;
         const endBinding =
           endElement && newElement.endBinding
             ? {
-                // @ts-ignore TS cannot discern check above
-                ...newElement.endBinding,
-                ...calculateFixedPointForElbowArrowBinding(
-                  newElement,
-                  endElement,
-                  "end",
-                  elementsMap,
-                  appState.isBindingEnabled,
-                ),
-              }
+              // @ts-ignore TS cannot discern check above
+              ...newElement.endBinding,
+              ...calculateFixedPointForElbowArrowBinding(
+                newElement,
+                endElement,
+                "end",
+                elementsMap,
+                appState.isBindingEnabled,
+              ),
+            }
             : null;
 
         newElement = {
@@ -2024,8 +2046,8 @@ export const actionChangeArrowType = register<keyof typeof ARROW_TYPE>({
                   return element.elbowed
                     ? ARROW_TYPE.elbow
                     : element.roundness
-                    ? ARROW_TYPE.round
-                    : ARROW_TYPE.sharp;
+                      ? ARROW_TYPE.round
+                      : ARROW_TYPE.sharp;
                 }
 
                 return null;
