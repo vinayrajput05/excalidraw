@@ -121,7 +121,7 @@ export const getRenderOpacity = (
   // if pending erasure, multiply again to combine further
   // (so that erasing always results in lower opacity than original)
   if (
-    elementsPendingErasure.has(element.id) ||
+    (elementsPendingErasure.has(element.id) && element.type !== "freedraw") ||
     (pendingNodes && pendingNodes.some((node) => node.id === element.id)) ||
     (containingFrame && elementsPendingErasure.has(containingFrame.id))
   ) {

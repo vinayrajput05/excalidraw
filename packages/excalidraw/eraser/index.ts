@@ -42,6 +42,7 @@ import type App from "../components/App";
 export class EraserTrail extends AnimatedTrail {
   private elementsToErase: Set<ExcalidrawElement["id"]> = new Set();
   private groupsToErase: Set<ExcalidrawElement["id"]> = new Set();
+  public lastErasePath: [number, number][] = [];
 
   constructor(animationFrameHandler: AnimationFrameHandler, app: App) {
     super(animationFrameHandler, app, {
@@ -73,6 +74,7 @@ export class EraserTrail extends AnimatedTrail {
     this.endPath();
     super.startPath(x, y);
     this.elementsToErase.clear();
+    this.lastErasePath = [];
   }
 
   addPointToPath(x: number, y: number, restore = false) {
@@ -93,6 +95,8 @@ export class EraserTrail extends AnimatedTrail {
       return [];
     }
 
+    this.lastErasePath = eraserPath.map((p) => [p[0], p[1]]);
+
     // for efficiency and avoid unnecessary calculations,
     // take only POINTS_ON_TRAIL points to form some number of segments
     const pathSegment = lineSegment<GlobalPoint>(
@@ -101,7 +105,7 @@ export class EraserTrail extends AnimatedTrail {
     );
 
     const candidateElements = this.app.visibleElements.filter(
-      (el) => !el.locked,
+      (el) => !el.locked && el.type === "freedraw",
     );
 
     const candidateElementsMap = arrayToMap(candidateElements);
